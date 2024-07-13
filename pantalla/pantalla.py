@@ -4,7 +4,13 @@ import os
 class pantalla():
     
     def __init__(self,ancho,alto) -> None:
-        pass
+        self.ancho = ancho
+        self.alto = alto
+        self.tamaño_letra = 25
+        self.input = ""
+        self.cantidad_lineas = self.alto // self.tamaño_letra
+        self.myFond = pygame.font.SysFont('Times New Roman', self.tamaño_letra)
+        self.screen = pygame.display.set_mode((self.ancho,self.alto))
     
     def manejo_texto(self):
         """
@@ -12,7 +18,7 @@ class pantalla():
         """
         pass
     
-    def manejo_teclas(self):
+    def manejo_teclas(self,key):
         """
         Manejo del teclado, para guardar el archivo es control + g
         """
@@ -46,4 +52,4 @@ class pantalla():
         """
         Se encarga de dibujar todo el contenido necesario en pantalla
         """
-        pass
+        self.screen.fill("black")
