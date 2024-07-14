@@ -120,8 +120,7 @@ class pantalla():
         archivos = os.listdir()
         archivo_txt = ""
         for archivo in archivos:
-            if ".txt" in archivo:
-                print(archivo)
+            if ".txt" in archivo or ".docx" in archivo or ".doc" in archivo:
                 if archivo_txt == "":
                     archivo_txt += archivo
                 else:
