@@ -28,12 +28,14 @@ class pantalla():
         for palabra in palabras:
             ancho_palabra, _ = self.myFond.size(palabra + " ")
             
-            if ancho_Total + ancho_palabra <= self.ancho:
+            if ancho_Total + ancho_palabra <= self.ancho and "\n" not in palabra:
                 linea_actual.append(palabra)
                 ancho_Total += ancho_palabra
             else:
-                lineas.append(" ".join(linea_actual))
-                linea_actual = [palabra]
+                subpalabra = palabra.split("\n")
+                if linea_actual:
+                    lineas.append(" ".join(linea_actual))
+                linea_actual = [subpalabra[0]]
                 ancho_Total = ancho_palabra
         
         if linea_actual:
@@ -50,7 +52,13 @@ class pantalla():
             for linea in lineas:
                 self._dibujarTexto(linea,y)
                 y += self.tamaño_letra
-    
+
+    def manejo_evento(self,event):
+        """
+        Manejo de evento, aca se encagara de escribir en pantalla.
+        """
+        pass
+
     def manejo_teclas(self,key):
         """
         Manejo del teclado, para guardar el archivo es control + g
@@ -86,3 +94,5 @@ class pantalla():
         Se encarga de dibujar todo el contenido necesario en pantalla
         """
         self.screen.fill("black")
+        
+        self.manejo_texto()

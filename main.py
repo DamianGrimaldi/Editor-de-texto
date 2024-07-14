@@ -17,6 +17,7 @@ def manejo_eventos():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+        screen.manejo_evento(event)
 
 def actualizar_pantalla():
     
@@ -25,6 +26,9 @@ def actualizar_pantalla():
     pygame.display.flip()
 
 def main():
+    
+    pygame.key.start_text_input() #Esto sirve para manejo del input
+    
     while True:
         
         manejo_eventos()
@@ -32,5 +36,7 @@ def main():
         reloj.tick(60)
         
         actualizar_pantalla()
+
+    pygame.key.stop_text_input()
 
 main()
