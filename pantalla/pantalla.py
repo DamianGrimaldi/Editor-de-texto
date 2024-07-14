@@ -3,13 +3,16 @@ import os
 
 class pantalla():
     
-    def __init__(self,ancho,alto) -> None:
+    def __init__(self,ancho,alto,botones,mouse) -> None:
         self.ancho = ancho
         self.alto = alto
+        self.botones = botones
+        self.mouse = mouse
         self.tamaño_letra = 25
         self.input = ""
-        self.momento = "guardado"
+        self.momento = "menu"
         self.archivo = ""
+        self.linea_inicial = 0
         self.cantidad_lineas = self.alto // self.tamaño_letra
         self.myFond = pygame.font.SysFont('Times New Roman', self.tamaño_letra)
         self.screen = pygame.display.set_mode((self.ancho,self.alto))
@@ -23,8 +26,10 @@ class pantalla():
         Se encarga de mostrar en pantalla el texto ingresado por el usuario.add()
         """
         if self.momento == "texto":
+            y = 0
             palabras = self.input.split(" ")
         elif self.momento == "guardado":
+            y = self.tamaño_letra
             palabras = self.archivo.split(" ")
         lineas = []
         linea_actual = []
@@ -46,17 +51,9 @@ class pantalla():
         if linea_actual:
             lineas.append(" ".join(linea_actual))
         
-        y = 0
-        
-        if len(lineas) > self.cantidad_lineas:
-            for linea in lineas[-self.cantidad_lineas:]:
-                self._dibujarTexto(linea,0,y)
-                y += self.tamaño_letra
-        
-        else:
-            for linea in lineas:
-                self._dibujarTexto(linea,0,y)
-                y += self.tamaño_letra
+        for linea in lineas[self.linea_inicial : self.cantidad_lineas]:
+            self._dibujarTexto(linea,0,y)
+            y += self.tamaño_letra
 
     def manejo_evento(self,event):
         """
@@ -65,28 +62,34 @@ class pantalla():
         if event.type == pygame.TEXTINPUT:
             if self.momento == "texto":
                 self.input += event.text
-            elif self.momento == "guardado":
+            elif self.momento == "guardar":
                 self.archivo += event.text
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            click = event.button
+            for boton in self.botones:
+                boton.accion(self.mouse,click,self)
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_BACKSPACE:
                 if self.momento == "texto":
                     self.input = self.input[:-1]
-                elif self.momento == "guardado":
+                elif self.momento == "guardar":
                     self.archivo = self.archivo[:-1]
             elif event.key == pygame.K_RETURN:
                 if self.momento == "texto":
                     self.input += " \n"
-                elif self.momento == "guardado":
+                elif self.momento == "guardar":
                     if self.comprobacion_archivo():
                         self.guardado()
                     self.momento = "texto"
+            elif event.key == pygame.K_RIGHT:
+                if self.momento == "texto":
+                    self.linea_inicial += 1
+                    self.cantidad_lineas += 1
+            elif event.key == pygame.K_LEFT:
+                if self.momento == "texto" and self.linea_inicial > 0:
+                    self.linea_inicial -= 1
+                    self.cantidad_lineas -= 1
 
-    def manejo_teclas(self,key):
-        """
-        Manejo del teclado, para guardar el archivo es control + g
-        """
-        pass
-    
     def comprobacion_archivo(self):
         """
         Aca va a validar si hay cambios con respecto al archivo.
@@ -121,7 +124,8 @@ class pantalla():
         """
         Elegir entre dos estado, abrir un archivo ya existente, o crear uno nuevo
         """
-        pass
+        self.botones[0].dibujar(self.screen,self.mouse)
+        self.botones[1].dibujar(self.screen,self.mouse)
     
     def dibujar(self):
         """
@@ -136,5 +140,9 @@ class pantalla():
             self.archivo = self.abrir_archivo()
             self.momento = "texto"
         
-        if self.momento in ["texto", "guardado"]:
+        if self.momento == "texto":
+            self.manejo_texto()
+
+        if self.momento == "guardar":
+            self._dibujarTexto("Ingrese el nombre del archivo",0,0)
             self.manejo_texto()
