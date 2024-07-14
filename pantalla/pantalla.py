@@ -8,6 +8,7 @@ class pantalla():
         self.alto = alto
         self.tamaño_letra = 25
         self.input = ""
+        self.momento = "menu"
         self.cantidad_lineas = self.alto // self.tamaño_letra
         self.myFond = pygame.font.SysFont('Times New Roman', self.tamaño_letra)
         self.screen = pygame.display.set_mode((self.ancho,self.alto))
@@ -57,7 +58,13 @@ class pantalla():
         """
         Manejo de evento, aca se encagara de escribir en pantalla.
         """
-        pass
+        if event.type == pygame.TEXTINPUT:
+            self.input += event.text
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_BACKSPACE:
+                self.input = self.input[:-1]
+            elif event.key == pygame.K_RETURN:
+                self.input += " \n"
 
     def manejo_teclas(self,key):
         """
@@ -95,4 +102,8 @@ class pantalla():
         """
         self.screen.fill("black")
         
-        self.manejo_texto()
+        if self.momento == "menu":
+            pass
+        
+        if self.momento == "archivo":
+            self.manejo_texto()
