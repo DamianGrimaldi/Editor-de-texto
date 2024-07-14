@@ -8,6 +8,8 @@ class pantalla():
         self.alto = alto
         self.botones = botones
         self.mouse = mouse
+        self.comienzo_escritura = self.botones[0].ancho
+        
         self.tamaño_letra = 25
         self.input = ""
         self.momento = "menu"
@@ -26,9 +28,13 @@ class pantalla():
         Se encarga de mostrar en pantalla el texto ingresado por el usuario.add()
         """
         if self.momento == "texto":
+            x = self.comienzo_escritura
+            ancho = self.ancho - self.comienzo_escritura
             y = 0
             palabras = self.input.split(" ")
-        elif self.momento == "guardado":
+        elif self.momento == "guardar":
+            x = 0
+            ancho = self.ancho
             y = self.tamaño_letra
             palabras = self.archivo.split(" ")
         lineas = []
@@ -38,7 +44,7 @@ class pantalla():
         for palabra in palabras:
             ancho_palabra, _ = self.myFond.size(palabra + " ")
             
-            if ancho_Total + ancho_palabra <= self.ancho and "\n" not in palabra:
+            if ancho_Total + ancho_palabra <= ancho and "\n" not in palabra:
                 linea_actual.append(palabra)
                 ancho_Total += ancho_palabra
             else:
@@ -52,7 +58,7 @@ class pantalla():
             lineas.append(" ".join(linea_actual))
         
         for linea in lineas[self.linea_inicial : self.cantidad_lineas]:
-            self._dibujarTexto(linea,0,y)
+            self._dibujarTexto(linea,x,y)
             y += self.tamaño_letra
 
     def manejo_evento(self,event):
@@ -141,6 +147,8 @@ class pantalla():
             self.momento = "texto"
         
         if self.momento == "texto":
+            self.botones[2].dibujar(self.screen,self.mouse)
+            self.botones[3].dibujar(self.screen,self.mouse)
             self.manejo_texto()
 
         if self.momento == "guardar":
