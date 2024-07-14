@@ -9,7 +9,7 @@ class pantalla():
         self.botones = botones
         self.mouse = mouse
         self.comienzo_escritura = self.botones[0].ancho
-        
+        self.archivo_txt = ""
         self.tamaño_letra = 25
         self.input = ""
         self.momento = "menu"
@@ -37,6 +37,7 @@ class pantalla():
             ancho = self.ancho
             y = self.tamaño_letra
             palabras = self.archivo.split(" ")
+        
         lineas = []
         linea_actual = []
         ancho_Total = 0
@@ -68,7 +69,7 @@ class pantalla():
         if event.type == pygame.TEXTINPUT:
             if self.momento == "texto":
                 self.input += event.text
-            elif self.momento == "guardar":
+            elif self.momento in ["guardar", "abrir"]:
                 self.archivo += event.text
         elif event.type == pygame.MOUSEBUTTONDOWN:
             click = event.button
@@ -78,7 +79,7 @@ class pantalla():
             if event.key == pygame.K_BACKSPACE:
                 if self.momento == "texto":
                     self.input = self.input[:-1]
-                elif self.momento == "guardar":
+                elif self.momento in ["guardar", "abrir"]:
                     self.archivo = self.archivo[:-1]
             elif event.key == pygame.K_RETURN:
                 if self.momento == "texto":
@@ -87,6 +88,8 @@ class pantalla():
                     if self.comprobacion_archivo():
                         self.guardado()
                     self.momento = "texto"
+                elif self.momento == "abrir":
+                    self.momento = "archivo"
             elif event.key == pygame.K_RIGHT:
                 if self.momento == "texto":
                     self.linea_inicial += 1
@@ -110,6 +113,30 @@ class pantalla():
             return True
         return False
     
+    def abrir(self):
+        """
+        Esa funcion sirve para mostrar en pantalla todos los archivos de la ubicacion actual del programa
+        """
+        archivos = os.listdir()
+        archivo_txt = ""
+        for archivo in archivos:
+            if ".txt" in archivo:
+                print(archivo)
+                if archivo_txt == "":
+                    archivo_txt += archivo
+                else:
+                    archivo_txt += " " + archivo
+
+        self.archivo_txt = archivo_txt
+
+        if self.archivo_txt == "":
+            self.botones[3].dibujar(self.screen, self.mouse)
+            self._dibujarTexto("No hay ningun archivo",0,0)
+        else:
+            self._dibujarTexto(self.archivo,0,0)
+            y = self.tamaño_letra
+            self._dibujarTexto(self.archivo_txt,0,y)
+
     def guardado(self):
         """
         Se encarga de guardar el contenido en el archivo
@@ -142,8 +169,11 @@ class pantalla():
         if self.momento == "menu":
             self.menu()
         
+        if self.momento == "abrir":
+            self.abrir()
+        
         if self.momento == "archivo":
-            self.archivo = self.abrir_archivo()
+            self.input = self.abrir_archivo()
             self.momento = "texto"
         
         if self.momento == "texto":

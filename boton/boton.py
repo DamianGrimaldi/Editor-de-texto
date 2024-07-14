@@ -33,6 +33,7 @@ class Boton():
                     screen.momento = "guardar"
                 elif self.valor == "salir":
                     screen.input = ""
+                    screen.archivo = ""
                     screen.momento = "menu"
                 elif self.valor == "abrir":
                     screen.momento = "abrir"
