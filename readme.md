@@ -10,15 +10,15 @@ Se recomienda utilizar un entorno virtual para evitar conflictos con las depende
 python -m venv venv #para windows
 venv\Scripts\activate
 
-Instalación de Pygame
+Instalación de Pygame.
 Dentro del entorno virtual activado, instala Pygame:
 pip install pygame==2.6.0
 
-Ejecución del Editor de Texto
+Ejecución del Editor de Texto.
 Para ejecutar el editor de texto, asegúrate de estar dentro del entorno virtual (si lo estás utilizando) y ejecuta main.py:
 python main.py
 
-Funcionalidades del Editor de Texto
+Funcionalidades del Editor de Texto:
 Menú Principal: Permite elegir entre abrir un archivo existente, crear un nuevo archivo, guardar el archivo actual o salir del editor.
 Edición de Texto: Permite escribir, borrar y navegar por el texto utilizando el teclado.
 Guardar y Abrir Archivos: Guarda el contenido actual en un archivo o abre un archivo existente para su edición.
